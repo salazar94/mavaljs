@@ -155,10 +155,10 @@ class Reactive {
 }
 
 //instancia de la clase que se comparte 
-
-var framework = {
-    createApp(options) {
-        return new Reactive(options);
-    }
+export default function createApp(options) {
+    return new Reactive(options);
 }
+
+
+
 
