@@ -2,7 +2,6 @@
 
 ### Directivas ⚙ 
 
-
 #### m-for
 --------
 Itera los elementos en el template
@@ -15,6 +14,34 @@ se especifica  el id con el nombre del modelo
 </main>
 ```
 
+### m-for-child
+Algunas veces los arreglos contienen elementos dentro de si ej.
+``` javascript
+const model = {
+    user : [{...},{
+            name: 'tony'
+            languages: ["HTML", "CSS", "JavaScript"]
+            }]
+ }
+```
+```html
+   
+<main class="card-container" m-for="jobs as job" id="jobs">
+       <div class="card-body-logo">
+             <img class="card-body-logo__img" src="{{job.logo}}" alt="logo enterprise" />                    
+        </div>
+        <div class="card-body-tags" >
+            <button class="btn" m-for-son="{{job.languages}}"></button>
+        </div>
+</main>
+```
+
+`Renderizado`
+```html
+<button class="btn" >HTML</button>
+<button class="btn" >CSS</button>
+<button class="btn" >Javascript</button>
+```
 ### m-If
 -------
 renderiza el elemento si se cumple la variable booleana
