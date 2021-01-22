@@ -52,12 +52,16 @@ class Reactive {
             const attribute = el.getAttribute('m-bind');
             this.mBind(el, this.$data, attribute)
         })
-
+        document.querySelectorAll('*[m-if]').forEach(el => {
+            const attribute = el.getAttribute('m-if');
+            this.mIf(el, this.$data, attribute)
+        })
         document.querySelectorAll('*[m-for]').forEach(el => {
             const value = el.getAttribute('m-for');
             let [origen, cursor] = value.split('as').map(item => item.trim());
             this.mFor(this.$data, origen, cursor, el)
         })
+        this.setIfs('*[m-if]');
         this.setEvents('*[m-on]');
     }
 
@@ -69,6 +73,13 @@ class Reactive {
             const attribute = el.getAttribute('m-on');
             const [event, callback] = attribute.split(':').map(x => x.trim())
             this.mOn(el, event, callback)
+        })
+    }
+
+    setIfs(query) {
+        document.querySelectorAll(query).forEach(el => {
+            const attribute = el.getAttribute('m-if');
+            this.mIf(el, this.$data, attribute)
         })
     }
 
@@ -86,11 +97,19 @@ class Reactive {
         if (!this.deps.has(name)) {
             if (Array.isArray(Reflect.get(target, name))) {
                 effect = () => this.forTrack(name);
-            } else {
+            }
+            if (this.isSelectorNotEmpty(`*[m-if="${name}"]`)) {
+                effect = () => document.querySelectorAll(`*[m-if="${name}"]`).forEach(el => this.mIf(el, target, name))
+            }
+            else {
                 effect = () => document.querySelectorAll(`*[m-text="${name}"]`).forEach(el => this.mText(el, target, name))
             }
             this.deps.set(name, effect)
         }
+    }
+
+    isSelectorNotEmpty(query) {
+        return Boolean([...document.querySelectorAll(query)].length)
     }
 
     trigger(name) {
@@ -100,8 +119,8 @@ class Reactive {
 
     //Directivas de la aplicacion
     mOn(el, event, funcName) {
-        el.addEventListener(event, this.externalClass[funcName].bind(this.$data))
-        el.removeEventListener(event, this.externalClass[funcName].bind(this.$data))
+        el.removeEventListener(event, this.externalClass[funcName]?.bind(this.$data))
+        el.addEventListener(event, this.externalClass[funcName]?.bind(this.$data))
     }
 
     mText(el, target, name) {
@@ -122,6 +141,38 @@ class Reactive {
         this.cacheChildView(el)
         el.innerHTML = this.childFor(values, cursor, el.id)
         this.setEvents('*[m-for] *[m-on]');
+        this.setIfs('*[m-for] *[m-if]');
+        this.mForSon(el)
+    }
+    mForSon(el) {
+        document.querySelectorAll(`#${el.id} *[m-for-son]`).forEach(el => {
+            let propierties = el.getAttribute('m-for-son').split(',')
+            if (!propierties[0].length) {
+                el.remove()
+            } else {
+                let clone;
+                propierties.forEach(em => {
+                    clone = el.cloneNode(true)
+                    clone.textContent = em
+                    clone.removeAttribute('m-for-son')
+                    el.parentNode.append(clone)
+                })
+                el.parentNode.removeChild(el)
+            }
+        })
+    }
+    mIf(el, target, name) {
+        let is;
+        if (name == 'true' || name == "false") {
+            is = name == 'true';
+        } else {
+            is = Reflect.get(target, name);
+        }
+        if (is) {
+            el.style.display = ''
+        } else {
+            el.style.display = 'none'
+        }
     }
 
     cacheChildView({ id }) {
@@ -141,16 +192,42 @@ class Reactive {
 
     childFor(values, cursor, id) {
         let htmlResult = '';
+        let result = []
         let cache = this.cacheFor.get(id)
+        console.log(cache)
         for (const iterator of values) {
-            for (const view of cache) {
-                const valueResult = [...view]
-                const key = view[1]?.replace(`${cursor}.`, '')
-                valueResult[1] = iterator[key]
-                htmlResult += valueResult.join('')
+            // if (Array.isArray(values)) { 
+
+            // }
+            if (cache.length <= 1) {
+                let index = 0
+                let cache2 = cache.flat();
+                for (const view of cache2) {
+                    // const valueResult = [...view]
+                    if (index % 2 == 0) {
+                        result.push(view);
+                        index++
+                        continue
+                    }
+                    else {
+                        let key = view?.replace(`${cursor}.`, '').trim()
+                        // valueResult[1] = iterator[key]
+                        const aux = iterator[key]
+                        result.push(iterator[key]);
+                    }
+                    index++;
+
+                }
+            } else {
+                for (const view of cache) {
+                    const valueResult = [...view]
+                    const key = view[1]?.replace(`${cursor}.`, '')
+                    valueResult[1] = iterator[key]
+                    htmlResult += valueResult.join('')
+                }
             }
         }
-        return htmlResult;
+        return htmlResult ? htmlResult : result.join('');
     }
 }
 
@@ -158,7 +235,5 @@ class Reactive {
 export default function createApp(options) {
     return new Reactive(options);
 }
-
-
 
 

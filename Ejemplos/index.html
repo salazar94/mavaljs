@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link href="https://fonts.googleapis.com/css2?family=Spartan" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+
+    <title>Job Listings</title>
+</head>
+
+<body>
+    <header class="header"></header>
+    <div class="parameters-filter parameters-filter--deactive">
+        <div class="parameter-filter__right"></div>
+        <div class="parameter-filter__left">
+            <button class="parameter-filter__left-button" onclick="removeCardSearch()">
+                Clear
+            </button>
+        </div>
+    </div>
+    <!--
+         <div class="card feature">
+        <div class="card-body">
+            <div class="card-body-logo">
+                <img class="card-body-logo__img" src="images/photosnap.svg" alt="logo enterprise" />
+            </div>
+
+            <div class="card-body-container">
+                <div class="card-body-container__header-title">
+                    <h3>Photosnap</h3>
+                    <span class="breadcrumb header-title__new">New!</span>
+                    <span class="breadcrumb header-title__feature">Feature</span>
+                </div>
+                <h2 class="card-body-container__title">
+                    Senior Frontend Developer
+                </h2>
+                <div class="card-body-container__contract">
+                    <p>1d ago</p>
+                    <p>•</p>
+                    <p>Full time</p>
+                    <p>•</p>
+                    <p>USA only</p>
+                </div>
+            </div>
+            <div class="card-body-tags">
+                <button class="btn">FrontEnd</button>
+                <button class="btn">Senior</button>
+                <button class="btn">HTML</button>
+            </div>
+
+        </div>
+    </div> -->
+    <main class="card-container" m-for="jobs as job" id="jobs">
+        <div class="card feature">
+            <div class="card-body">
+                <div class="card-body-logo">
+                    <img class="card-body-logo__img" src="{{job.logo}}" alt="logo enterprise" />                    
+                </div>
+                <div class="card-body-container">
+                    <div class="card-body-container__header-title">
+                        <h3> {{ job.company }} </h3>
+                        <span class="breadcrumb header-title__new" m-if="{{job.new}}">New!</span>
+                        <span class="breadcrumb header-title__feature" m-if="{{job.featured}}">Feature</span>
+                    </div>
+                    <h2 class="card-body-container__title">
+                        {{job.position}}
+                    </h2>
+                    <div class="card-body-container__contract">
+                        <p>{{job.postedAt}}</p>
+                        <p>•</p>
+                        <p>{{job.contract}}</p>
+                        <p>•</p>
+                        <p>{{job.location}}</p>
+                    </div>
+                </div>
+                <div class="card-body-tags" >
+                    <button class="btn" m-for-son="{{job.languages}}"></button>
+                    <button class="btn" m-for-son="{{job.tools}}"></button>
+                </div>
+
+            </div>
+        </div>
+    </main>
+    <script type="module" src="../reactive-mini.js"></script>
+    <script type="module" src="./script.js" defer></script>
+</body>
+
+</html>
