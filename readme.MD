@@ -40,7 +40,7 @@ y con [`m-text`](https://github.com/pandao/editor.md ) se puede ver reflejada
 m-text
 -------
 Refleja los datos del modelo
-```json
+```javascript
 const modelo = {
     nombre : 'tony'
 }
@@ -59,7 +59,7 @@ m-bind
 Asigna attributos  a los elementos html, primero el atributo que se va agregar seguido del dato en el modelo 
 m-bind = "attribute:modelo" 
 
-```json
+```javascript
 const model = {
     descripcion : 'imagen de carros'
 }
