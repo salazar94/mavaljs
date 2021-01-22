@@ -1,9 +1,9 @@
 # Maval JS 🤪🤪
 
-Directivas ⚙ 
-==========
+### Directivas ⚙ 
 
-m-for
+
+#### m-for
 --------
 Itera los elementos en el template
 se especifica  el id con el nombre del modelo
@@ -15,7 +15,7 @@ se especifica  el id con el nombre del modelo
 </main>
 ```
 
-m-If
+### m-If
 -------
 renderiza el elemento si se cumple la variable booleana
 
@@ -27,7 +27,7 @@ renderiza el elemento si se cumple la variable booleana
  <span class="status header-title" m-if="{{job.hasInsurance}}">👍</span>
 ```
 
-m-model
+### m-model
 ----------
 Se asigna el valor de a una variable dentro del modelo
 y con [`m-text`](https://github.com/pandao/editor.md ) se puede ver reflejada 
@@ -37,7 +37,7 @@ y con [`m-text`](https://github.com/pandao/editor.md ) se puede ver reflejada
  <span m-text="nombre" > *SE REFLEJA NOMBRE</span>
 ```
 
-m-text
+### m-text
 -------
 Refleja los datos del modelo
 ```javascript
@@ -54,7 +54,7 @@ const modelo = {
 <label for="user" m-text="nombre">tony</label>
 ```
 
-m-bind
+### m-bind
 -----------
 Asigna attributos  a los elementos html, primero el atributo que se va agregar seguido del dato en el modelo 
 m-bind = "attribute:modelo" 
@@ -69,7 +69,7 @@ const model = {
 <img class="img" m-bind="alt:descripcion" ></img>
 ```
 
-m-on
+### m-on
 ---------
 
 asignar listener a elementos DOM, dentro del elemento se agrega la etiqueta 
